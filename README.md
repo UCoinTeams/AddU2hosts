@@ -5,9 +5,9 @@
 
  1. 下载本程序 
 
-> [代理下载](https://startworld.online/https://github.com/UCoinTeams/AddU2hosts/archive/refs/heads/main.zip) 
+> [代理下载](https://startworld.online/https://github.com/UCoinTeams/AddU2hosts/releases/download/v1.0.0/AddU2hosts.zip) 
 
-> [直接下载](https://github.com/UCoinTeams/AddU2hosts/archive/refs/heads/main.zip)
+> [直接下载](https://github.com/UCoinTeams/AddU2hosts/releases/download/v1.0.0/AddU2hosts.zip)
 
  2. 以管理员身份运行 "AddU2hosts.bat"
 
