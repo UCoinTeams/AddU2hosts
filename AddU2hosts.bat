@@ -1,6 +1,6 @@
 :: --------------------------------------------------------------
 ::	项目: CloudflareSpeedTest 自动添加替换更新 U2 Hosts
-::	版本: 0.0.1
+::	版本: 0.0.2
 ::	项目: https://github.com/Ukenn2112/AddU2hosts/
 ::
 ::	原项目: CloudflareSpeedTest 自动更新 Hosts
@@ -38,7 +38,7 @@ if '%errorlevel%' NEQ '0' (
 
 
 ::如果 nowip.txt 文件不存在，说明是第一次运行该脚本
-if not exist "nowip.txt" ( 
+if not exist "nowip.txt" (
     echo # U2 dmhy Host Start>> %SystemRoot%\system32\drivers\etc\hosts
     echo 104.25.26.31 u2.dmhy.org>> %SystemRoot%\system32\drivers\etc\hosts
     echo 104.25.26.31 tracker.dmhy.org>> %SystemRoot%\system32\drivers\etc\hosts
@@ -46,7 +46,6 @@ if not exist "nowip.txt" (
 
     echo 该脚本的作用为 解决Cloudflare CDN被污染导致无法直接登录动漫花园
     echo 并使用 CloudflareST 测速后获取最快 IP 并替换 Hosts 中的 Cloudflare CDN IP。
-    echo.
     echo 104.25.26.31>nowip.txt
     echo.
 )  
@@ -55,10 +54,25 @@ if not exist "nowip.txt" (
 set /p nowip=<nowip.txt
 echo 开始测速...
 
-:: 这里可以自己添加、修改 CloudflareST 的运行参数，echo.| 的作用是自动回车退出程序（不再需要加上 -p 0 参数了）
-echo.|CloudflareST-amd64.exe
 
-for /f "tokens=1 delims=," %%i in (result.csv) do (
+:: 这个 RESET 是给需要 "找不到满足条件的 IP 就一直循环测速下去" 功能的人准备的
+:: 如果需要这个功能就把下面 3 个 goto :STOP 改为 goto :RESET 即可
+:RESET
+
+
+:: 这里可以自己添加、修改 CloudflareST 的运行参数，echo.| 的作用是自动回车退出程序（不再需要加上 -p 0 参数了）
+echo.|CloudflareST-amd64.exe -o "result_hosts.txt"
+
+
+:: 判断结果文件是否存在，如果不存在说明结果为 0
+if not exist result_hosts.txt (
+    echo.
+    echo CloudflareST 测速结果 IP 数量为 0，跳过下面步骤...
+    goto :STOP
+)
+
+:: 获取第一行的最快 IP
+for /f "tokens=1 delims=," %%i in (result_hosts.txt) do (
     SET /a n+=1 
     If !n!==2 (
         SET bestip=%%i
@@ -66,12 +80,38 @@ for /f "tokens=1 delims=," %%i in (result.csv) do (
     )
 )
 :END
+
+:: 判断刚刚获取的最快 IP 是否为空，以及是否和旧 IP 一样
+if "%bestip%"=="" (
+    echo.
+    echo CloudflareST 测速结果 IP 数量为 0，跳过下面步骤...
+    goto :STOP
+)
+if "%bestip%"=="%nowip%" (
+    echo.
+    echo CloudflareST 测速结果 IP 数量为 0，跳过下面步骤...
+    goto :STOP
+)
+
+
+:: 下面这段代码是 "找不到满足条件的 IP 就一直循环测速下去" 才需要的代码
+:: 考虑到当指定了下载速度下限，但一个满足全部条件的 IP 都没找到时，CloudflareST 就会输出所有 IP 结果
+:: 因此当你指定 -sl 参数时，需要移除下面这段代码开头的这个 :: 冒号注释符，来做文件行数判断（比如下载测速数量：10 个，那么下面的值就设在为 11）
+::set /a v=0
+::for /f %%a in ('type result_hosts.txt') do set /a v+=1
+::if %v% GTR 11 (
+::    echo.
+::    echo CloudflareST 测速结果没有找到一个完全满足条件的 IP，重新测速...
+::    goto :RESET
+::)
+
+
 echo %bestip%>nowip.txt
 echo.
 echo 旧 IP 为 %nowip%
 echo 新 IP 为 %bestip%
-C:
-CD "C:\Windows\System32\drivers\etc"
+
+CD /d "C:\Windows\System32\drivers\etc"
 echo.
 echo 开始备份 Hosts 文件（hosts_backup）...
 copy hosts hosts_backup
@@ -84,6 +124,8 @@ echo 开始替换...
         echo !s!
         )
 )>hosts
+
 echo 完成...
 echo.
+:STOP
 pause 
