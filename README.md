@@ -18,5 +18,5 @@
  1. 一键运行脚本 
 
  ```shell
-bash <(curl -sSL https://startworld.online/https://raw.githubusercontent.com/UCoinTeams/AddU2hosts/main/AddU2hosts.sh)
+curl -sSL https://startworld.online/https://raw.githubusercontent.com/UCoinTeams/AddU2hosts/main/AddU2hosts.sh | sudo bash
 ```
