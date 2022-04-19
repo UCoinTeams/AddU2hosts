@@ -38,7 +38,9 @@ cloudflare_st() {
   echo "104.25.26.31" > nowip.txt
 	echo -e "${Green_font_prefix}> 开始测速...${Font_color_suffix}";
 	NOWIP=$(head -1 nowip.txt)
-    ./CloudflareST
+    # 可在 -url 后替换为你自建的或他人提供的其他测速点，避免Cloudflare限速
+    # 自建方法详情请见 https://github.com/XIU2/CloudflareSpeedTest/issues/168
+    ./CloudflareST -url https://cfst.kevinmx.workers.dev/200mb.test
 	BESTIP=$(sed -n "2,1p" result.csv | awk -F, '{print $1}')
 	echo ${BESTIP} > nowip.txt
 	echo -e "\n旧 IP 为 ${NOWIP}\n${Yellow_font_prefix}新 IP 为 ${BESTIP}${Font_color_suffix}\n"
