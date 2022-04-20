@@ -30,15 +30,15 @@ default_host() {
 # CloudflareST 测试程序
 cloudflare_st() {
   echo -e "${Green_font_prefix}> 正在下载 CloudflareST 测试程序${Font_color_suffix}";
-  wget -P /home/CloudflareSTtar ${web_proxy}https://github.com/XIU2/CloudflareSpeedTest/releases/download/v1.4.10/CloudflareST_linux_amd64.tar.gz
-  tar -zxf /home/CloudflareSTtar/CloudflareST_linux_amd64.tar.gz -C /home/CloudflareSTtar
-  mv /home/CloudflareSTtar/CloudflareST /${USER}
-  mv /home/CloudflareSTtar/ip.txt /${USER}
-  chmod +x /${USER}/CloudflareST
+  wget ${web_proxy}https://cf.kevinmx.workers.dev/?url=https%3A%2F%2Fgithub.com%2FXIU2%2FCloudflareSpeedTest%2Freleases%2Fdownload%2Fv2.0.3%2FCloudflareST_linux_amd64.tar.gz -O CloudflareST_linux_amd64.tar.gz
+  tar -zxf CloudflareST_linux_amd64.tar.gz
+  chmod +x CloudflareST
   echo "104.25.26.31" > nowip.txt
 	echo -e "${Green_font_prefix}> 开始测速...${Font_color_suffix}";
 	NOWIP=$(head -1 nowip.txt)
-    ./CloudflareST
+    # 可在 -url 后替换为你自建的或他人提供的其他测速点，避免Cloudflare限速
+    # 自建方法详情请见 https://github.com/XIU2/CloudflareSpeedTest/issues/168
+    ./CloudflareST -url https://cfst.kevinmx.workers.dev/200mb.test
 	BESTIP=$(sed -n "2,1p" result.csv | awk -F, '{print $1}')
 	echo ${BESTIP} > nowip.txt
 	echo -e "\n旧 IP 为 ${NOWIP}\n${Yellow_font_prefix}新 IP 为 ${BESTIP}${Font_color_suffix}\n"
@@ -50,10 +50,7 @@ cloudflare_st() {
 	sed -i 's/'${NOWIP}'/'${BESTIP}'/g' /etc/hosts
 	echo -e "${Green_font_prefix}> 完成...${Font_color_suffix}";
   echo -e "${Green_font_prefix}> 清理 CloudflareST 测试程序${Font_color_suffix}";
-  rm -rf /home/CloudflareSTtar*
-  rm -rf /${USER}/CloudflareST
-  rm -rf /${USER}/nowip.txt
-  rm -rf /${USER}/ip.txt
+  rm -rf *.txt cfst_hosts.sh result.csv CloudflareST*
 }
 
 
