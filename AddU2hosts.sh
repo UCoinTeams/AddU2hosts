@@ -7,7 +7,8 @@
 # --------------------------------------------------------------
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Yellow_font_prefix="\033[33m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
-
+# 可在此处自行替换proxy地址
+web_proxy="https://startworld.online/"
 
 # 判断 root 用户
 check_root() {
@@ -30,7 +31,7 @@ default_host() {
 # CloudflareST 测试程序
 cloudflare_st() {
   echo -e "${Green_font_prefix}> 正在下载 CloudflareST 测试程序${Font_color_suffix}";
-  wget ${web_proxy}https://cf.kevinmx.workers.dev/?url=https%3A%2F%2Fgithub.com%2FXIU2%2FCloudflareSpeedTest%2Freleases%2Fdownload%2Fv2.0.3%2FCloudflareST_linux_amd64.tar.gz -O CloudflareST_linux_amd64.tar.gz
+  wget ${web_proxy}https://github.com/XIU2/CloudflareSpeedTest/releases/download/v2.0.3/CloudflareST_linux_amd64.tar.gz -O CloudflareST_linux_amd64.tar.gz
   tar -zxf CloudflareST_linux_amd64.tar.gz
   chmod +x CloudflareST
   echo "104.25.26.31" > nowip.txt
@@ -38,7 +39,8 @@ cloudflare_st() {
 	NOWIP=$(head -1 nowip.txt)
     # 可在 -url 后替换为你自建的或他人提供的其他测速点，避免Cloudflare限速
     # 自建方法详情请见 https://github.com/XIU2/CloudflareSpeedTest/issues/168
-    ./CloudflareST -url https://cfst.kevinmx.workers.dev/200mb.test
+    # Cloudflare Workers 现已被 DNS 污染，不建议用其进行测速
+    ./CloudflareST -url https://cloudflaremirrors.com/archlinux/iso/latest/arch/x86_64/airootfs.sfs
 	BESTIP=$(sed -n "2,1p" result.csv | awk -F, '{print $1}')
 	echo ${BESTIP} > nowip.txt
 	echo -e "\n旧 IP 为 ${NOWIP}\n${Yellow_font_prefix}新 IP 为 ${BESTIP}${Font_color_suffix}\n"
