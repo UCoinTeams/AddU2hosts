@@ -8,7 +8,7 @@
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Yellow_font_prefix="\033[33m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 # 可在此处自行替换proxy地址
-web_proxy="https://startworld.online/"
+web_proxy="https://cors.ukenn.workers.dev/"
 
 # 判断 root 用户
 check_root() {
