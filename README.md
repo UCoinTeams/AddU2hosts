@@ -18,5 +18,5 @@
  1. 一键运行脚本 
 
  ```shell
-curl -sSL https://cors.ukenn.workers.dev/https://raw.githubusercontent.com/UCoinTeams/AddU2hosts/main/AddU2hosts.sh | sudo bash
+curl -sSL https://ukenn.net/https://raw.githubusercontent.com/UCoinTeams/AddU2hosts/main/AddU2hosts.sh | sudo bash
 ```
