@@ -31,7 +31,7 @@ default_host() {
 # CloudflareST 测试程序
 cloudflare_st() {
   echo -e "${Green_font_prefix}> 正在下载 CloudflareST 测试程序${Font_color_suffix}";
-  wget ${web_proxy}https://github.com/XIU2/CloudflareSpeedTest/releases/download/v2.0.3/CloudflareST_linux_amd64.tar.gz -O CloudflareST_linux_amd64.tar.gz
+  wget ${web_proxy}https://github.com/XIU2/CloudflareSpeedTest/releases/download/v2.1.0/CloudflareST_linux_amd64.tar.gz -O CloudflareST_linux_amd64.tar.gz
   tar -zxf CloudflareST_linux_amd64.tar.gz
   chmod +x CloudflareST
   echo "104.25.26.31" > nowip.txt
